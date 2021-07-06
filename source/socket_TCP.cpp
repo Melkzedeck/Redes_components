@@ -2,6 +2,8 @@
 
 /*-------------------- Comeco da classe Tclient --------------------*/
 
+using std::runtime_error;
+
 unsigned int Tclient::tam_max=1024;
 
 void Tclient::setTAM(const int& t){tam_max=t;}
@@ -9,10 +11,10 @@ void Tclient::setTAM(const int& t){tam_max=t;}
 Tclient::Tclient(const Adress& addr){
 	socket_ = socket(addr.family(), SOCK_STREAM, 0);
 	if (socket_ == -1) {
-		logexit("socket");
+		throw runtime_error("erro ao criar socket");
 	}
 	if (0 != connect(socket_, addr.addr(), *(addr.addrlen()))) {
-		logexit("connect");
+		throw runtime_error("erro connect");
 	}
 
 }
@@ -73,20 +75,20 @@ std::string STclient::addr_str(){return addr_.str();}
 Tserver::Tserver(Adress& addr){
 	socketS = socket(addr.family(), SOCK_STREAM, 0);
 	if (socketS == -1) {
-        logexit("socket");
+        throw runtime_error("erro ao criar socket");
     }
 
     int enable = 1;
     if (0 != setsockopt(socketS, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int))) {
-        logexit("setsockopt");
+        throw runtime_error("erro no setsockopt");
     }
 
     if (0 != bind(socketS, addr.addr(), *(addr.addrlen()))) {
-        logexit("bind");
+        throw runtime_error("erro bind");
     }
 
     if (0 != listen(socketS, 10)) {
-        logexit("listen");
+        throw runtime_error("erro listen");
     }
 }
 
@@ -102,7 +104,7 @@ STclient Tserver::waitConection(){
     socklen_t caddrlen = sizeof(struct sockaddr_storage);
 	socketC = accept(socketS, caddr, &caddrlen);
 	if (socketC == -1) {
-            logexit("accept");
+            throw runtime_error("erro accept");
         }
 	return STclient(socketC,Adress(caddr));
 }
