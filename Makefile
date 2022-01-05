@@ -1,50 +1,35 @@
+CC=gcc
+CFLAGS= -Wall -g
+RM=rm -rf
+CFORMAT=.cpp
 
-PROJ_SERVER=server
+# objetos e .cpp
+C_DEPENDENCES=$(wildcard ./source/*$(CFORMAT))
+OBJ_DEPENDENCES=$(subst $(CFORMAT),.o,$(subst src,obj, $(C_DEPENDENCES)))
 
-PROJ_CLIENT=client
+# diretórios
+C_DIR=./src/
+H_DIR=./include/
+MAIN_DIR=./main/
+OBJ_DIR=./obj/
 
-RM = rm -rf
+all: make_dir $(OBJ_DEPENDENCES)
+	echo $(C_DEPENDENCES)
+	$(CC) $(CFLAGS) $(MAIN_DIR)server$(CFORMAT) $(OBJ_DEPENDENCES) -o server -I$(H_DIR)
+	$(CC) $(CFLAGS) $(MAIN_DIR)client$(CFORMAT) $(OBJ_DEPENDENCES) -o client -I$(H_DIR)
 
-# .c files
-C_SOURCE=$(wildcard ./source/*.cpp)
+$(OBJ_DIR)%.o: $(C_DIR)%$(CFORMAT)
+	@ $(CC) $(CFLAGS) -c $< -o $@ -I$(H_DIR)
 
-# .h files
-H_SOURCE=$(wildcard ./include/*.h)
 
-# Object files
-OBJ=$(subst .cpp,.o,$(subst source,objects,$(C_SOURCE)))
+make_dir:
+	@ [ -d "./obj" ] && echo "'./obj' already exist" || mkdir obj
 
-# Compiler
-CC=g++
+cleanObj:
+	@ rm ./obj/*
+	@ echo "objetos excluídos"
 
-# Flags for compiler
-CC_FLAGS=-W         \
-         -Wall      \
-         -pedantic
-
-#
-# Compilation and linking
-#
-all: objFolder $(PROJ_SERVER) $(PROJ_CLIENT) $(PROJ_CLIENT2)
-
-$(PROJ_SERVER): ./obj/$(PROJ_SERVER).o $(OBJ)
-	$(CC) -o servidor $^
-
-$(PROJ_CLIENT): ./obj/$(PROJ_CLIENT).o $(OBJ)
-	$(CC) -o cliente $^
-
-./objects/%.o: ./source/%.cpp ./include/%.h
-	@ $(CC) -c -o $@ $< $(CC_FLAGS)  
-
-./obj/%.o: %.cpp $(H_SOURCE)
-	@ $(CC) -c -o $@ $< $(CC_FLAGS)  
-
-objFolder:
-	@ mkdir -p objects
-	@ mkdir -p obj
-
-clean:
-	@ $(RM) ./objects/*.o ./obj/*.o *~
-	@ rmdir objects obj
-	@ $(RM) cliente servidor *~
-	@ echo 'Objetos e programas removidos'
+clean: cleanObj
+	@ rmdir obj
+	@ rm  client server
+	@ echo "binários excluídos"
