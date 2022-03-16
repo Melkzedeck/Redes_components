@@ -4,9 +4,13 @@
 
 using std::runtime_error;
 
-unsigned int Tclient::tam_max=1024;
+unsigned int Tclient::tamMaxMsg=1024;
 
-void Tclient::setTAM(const int& t){tam_max=t;}
+unsigned int Tclient::tamHead_=0;
+unsigned int Tclient::posSize_=0;
+unsigned int Tclient::tamSize_=0;
+
+void Tclient::setTamMax(const unsigned int& t){tamMaxMsg=t;}
 
 Tclient::Tclient(const Adress& addr){
 	socket_ = socket(addr.family(), SOCK_STREAM, 0);
@@ -30,11 +34,9 @@ ssize_t Tclient::operator<<(const std::string& str){
 }
 
 ssize_t Tclient::operator>>(std::string& str){
-    char *msg;
-    msg = new char[tam_max];
-    ssize_t cnt = recv(socket_, msg, tam_max, 0);
+    char msg[tamMaxMsg];
+    ssize_t cnt = recv(socket_, msg, tamMaxMsg, 0);
     str = std::string(msg, cnt);
-    delete msg;
     return cnt;
 }
 	
@@ -45,29 +47,53 @@ Tclient& Tclient::operator=(const Tclient& cli){
     return *this;
 }
 
+//retorna o endereço em string	
+std::string Tclient::addr(){
+	// Get my ip address and port
+	sockaddr *my_addr;
+	sockaddr_in addr4;
+	sockaddr_in6 addr6;
+	bool v4 = true;
+	char myIP[20];
+
+    bzero(&addr4, sizeof(addr4));
+    bzero(&addr6, sizeof(addr6));
+	bzero(&myIP,20);
+
+	my_addr = (struct sockaddr*) &addr4;
+    socklen_t len = sizeof(*my_addr);
+	int af = getsockname(socket_, my_addr, &len);
+    if(getsockname(socket_, my_addr, &len) != 0){ // se o endereço não for IPv4
+		v4 = false;
+		my_addr = (sockaddr*) &addr6;
+    	socklen_t len = sizeof(*my_addr);
+		if(getsockname(socket_, (struct sockaddr *) &my_addr, &len) != 0){ // se o endereço não for IPv6
+			return("Familia IP nao reconhecida");
+		}
+	}
+	if(v4){
+		inet_ntop(AF_INET, my_addr, myIP, sizeof(myIP));
+	}
+	else{
+		inet_ntop(AF_INET6, my_addr, myIP, sizeof(myIP));
+	}
+    
+	return(std::string(myIP));
+}
+
+
+
+ssize_t Tclient::operator<<(const char*){}
+
+
+ssize_t Tclient::operator>>(char*){}
+
+
 Tclient::~Tclient(){
 	close(socket_);
 }
 
 /*-------------------- Termino da classe Tclient --------------------*/
-
-/*-------------------- Comeco da classe STclient --------------------*/
-
-STclient::STclient(int s, Adress addr1):Tclient(s){
-    addr_ = addr1;
-}
-
-STclient& STclient::operator=(const STclient& cli){
-    this->Tclient::operator=(cli);
-    this->addr_ = cli.addr_;
-    return *this;
-}
-
-Adress STclient::addr(){return addr_;}
-
-std::string STclient::addr_str(){return addr_.str();}
-
-/*-------------------- Termino da classe STclient --------------------*/
 
 
 /*-------------------- Comeco da classe Tserver --------------------*/
@@ -97,7 +123,7 @@ Tserver::Tserver(const Tserver& copia){this->socketS = copia.socketS;}
 int Tserver::sockS() const {return socketS;}
 
 
-STclient Tserver::waitConection(){
+Tclient Tserver::waitConection(){
     int socketC;
 	struct sockaddr_storage cstorage;
     struct sockaddr *caddr = (struct sockaddr *)(&cstorage);
@@ -106,7 +132,7 @@ STclient Tserver::waitConection(){
 	if (socketC == -1) {
             throw runtime_error("erro accept");
         }
-	return STclient(socketC,Adress(caddr));
+	return Tclient(socketC);
 }
 
 

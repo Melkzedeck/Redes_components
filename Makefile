@@ -1,10 +1,10 @@
-CC=gcc
+CC=g++
 CFLAGS= -Wall -g
 RM=rm -rf
 CFORMAT=.cpp
 
 # objetos e .cpp
-C_DEPENDENCES=$(wildcard ./source/*$(CFORMAT))
+C_DEPENDENCES=$(wildcard ./src/*$(CFORMAT))
 OBJ_DEPENDENCES=$(subst $(CFORMAT),.o,$(subst src,obj, $(C_DEPENDENCES)))
 
 # diretórios
@@ -19,7 +19,7 @@ all: make_dir $(OBJ_DEPENDENCES)
 	$(CC) $(CFLAGS) $(MAIN_DIR)client$(CFORMAT) $(OBJ_DEPENDENCES) -o client -I$(H_DIR)
 
 $(OBJ_DIR)%.o: $(C_DIR)%$(CFORMAT)
-	@ $(CC) $(CFLAGS) -c $< -o $@ -I$(H_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -I$(H_DIR)
 
 
 make_dir:
