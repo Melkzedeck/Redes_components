@@ -4,13 +4,13 @@
 
 using std::runtime_error;
 
-unsigned int Tclient::tamMaxMsg=1024;
+unsigned int Tclient::tamMaxMsg = 1024;
 
-unsigned int Tclient::tamHead_=0;
-unsigned int Tclient::posSize_=0;
-unsigned int Tclient::tamSize_=0;
+unsigned int Tclient::tamHead_ = 0;
+unsigned int Tclient::posSize_ = 0;
+unsigned int Tclient::tamSize_ = 0;
 
-void Tclient::setTamMax(const unsigned int& t){tamMaxMsg=t;}
+void Tclient::setTamMax(const unsigned int& t){tamMaxMsg = t;}
 
 Tclient::Tclient(const Adress& addr){
 	socket_ = socket(addr.family(), SOCK_STREAM, 0);
@@ -27,13 +27,13 @@ Tclient::Tclient(const Tclient& c){this->socket_ = c.socket_;}
 
 Tclient::Tclient(const int& s){socket_ = s;}
 
-int Tclient::sock() const {return socket_;}
+const int& Tclient::sock() const {return socket_;}
 
-ssize_t Tclient::operator<<(const std::string& str){
+ssize_t Tclient::operator<<(const std::string& str) const{
 		return send(socket_, str.c_str(), str.length(), 0);
 }
 
-ssize_t Tclient::operator>>(std::string& str){
+ssize_t Tclient::operator>>(std::string& str) const{
     char msg[tamMaxMsg];
     ssize_t cnt = recv(socket_, msg, tamMaxMsg, 0);
     str = std::string(msg, cnt);
@@ -48,7 +48,7 @@ Tclient& Tclient::operator=(const Tclient& cli){
 }
 
 //retorna o endereço em string	
-std::string Tclient::addr(){
+std::string Tclient::addr() const{
 	// Get my ip address and port
 	sockaddr *my_addr;
 	sockaddr_in addr4;
@@ -62,7 +62,6 @@ std::string Tclient::addr(){
 
 	my_addr = (struct sockaddr*) &addr4;
     socklen_t len = sizeof(*my_addr);
-	int af = getsockname(socket_, my_addr, &len);
     if(getsockname(socket_, my_addr, &len) != 0){ // se o endereço não for IPv4
 		v4 = false;
 		my_addr = (sockaddr*) &addr6;
@@ -83,10 +82,31 @@ std::string Tclient::addr(){
 
 
 
-ssize_t Tclient::operator<<(const char*){}
+ssize_t Tclient::operator<<(const char* data) const{
+	char head[tamHead_];
+	bzero(head, tamHead_);
+	int tam  = 0;
+	strncpy(head,data,tamHead_);
+	for(unsigned int i = 0; i < tamHead_-posSize_ && i < tamSize_ - posSize_; i++){
+		tam += ((int)(head[i+posSize_]) << 8*i)&(0xff << 8*i);
+	}
+	return send(socket_, data, tam + tamHead_, 0);
+}
 
 
-ssize_t Tclient::operator>>(char*){}
+ssize_t Tclient::operator>>(char* data) const{
+	char head[tamHead_];
+	int tam  = 0;
+	ssize_t cnt;
+	bzero(head, tamHead_);
+	cnt = recv(socket_, head, tamHead_, 0);
+	for(int i = 0; i < tamHead_-posSize_ && i < tamSize_ - posSize_; i++){
+		tam += ((int)(head[i+posSize_]) << 8*i)&(0xff << 8*i);
+	}
+	strncpy(data, head, tamHead_);
+	cnt += recv(socket_, data + tamHead_, tam, 0);
+	return cnt;
+}
 
 
 Tclient::~Tclient(){
@@ -98,7 +118,7 @@ Tclient::~Tclient(){
 
 /*-------------------- Comeco da classe Tserver --------------------*/
 
-Tserver::Tserver(Adress& addr){
+Tserver::Tserver(const Adress& addr){
 	socketS = socket(addr.family(), SOCK_STREAM, 0);
 	if (socketS == -1) {
         throw runtime_error("erro ao criar socket");
@@ -120,7 +140,7 @@ Tserver::Tserver(Adress& addr){
 
 Tserver::Tserver(const Tserver& copia){this->socketS = copia.socketS;}
 
-int Tserver::sockS() const {return socketS;}
+const int& Tserver::sock() const {return socketS;}
 
 
 Tclient Tserver::waitConection(){

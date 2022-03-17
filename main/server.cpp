@@ -1,6 +1,8 @@
 #include <iostream>
 #include <Adress.h>
-#include <socket_TCP.h>
+#include "socket_TCP.h"
+#include "multiple_TCP.h"
+
 
 using std::string;
 using std::cout;
@@ -10,11 +12,19 @@ using std::getline;
 
 int main(int argc, char** argv){
 	Adress addrServer(argv[1][1],argv[2]);
-	Tserver sock(addrServer);
-	Tclient sockCli = sock.waitConection();
+	Multiple server(addrServer);
 	string msg;
 	ssize_t count;
-	char data[100];
+	Tclient* newCli = nullptr;
+
+	while(true){
+		server.clearAndSet();
+		server.wait();
+		newCLi = server.addClient();
+		if(newClir != nullptr){
+			cout << "New connection: " << (newCli -> addr()) << endl;
+		}
+	}
 
 	msg = sockCli.addr();
 	cout << "Connected to client in: " << msg << endl;
@@ -22,9 +32,4 @@ int main(int argc, char** argv){
 	cout << "Message received: " << msg << endl;
 	cout << "Total of " << count << "bytes received" <<endl;
 
-	cin.getline(data, 99);
-	msg = string(data);
-	count = sockCli << msg;
-	cout << "Message sended: " << msg << endl;
-	cout << "Total of " << count << "bytes sended" <<endl;
 }

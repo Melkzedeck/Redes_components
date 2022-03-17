@@ -33,27 +33,27 @@ public:
 	static void setParamHead(const unsigned int& tamHead, const unsigned int& posSize, const unsigned int& tamSize);
 
 	//Get socket
-	int sock() const;
+	const int& sock() const;
 
 	/* fluxo de saída de string:
 	envia para o socket a string
 	e retorna a qntd de bits enviadas*/
-	ssize_t operator<<(const std::string&);
+	ssize_t operator<<(const std::string&) const;
 
 	/* fluxo de entrada de string:
 	recebe do socket uma string
 	e retorna a qntd de bits recebidas*/
-	ssize_t operator>>(std::string&);
+	ssize_t operator>>(std::string&) const;
 
 	// Fluxo de saída de dados codificados em string C
 	// Se o tamanho do cabeçalho for zero, será enviado os dados até o caracter '\0'(que em bytes é 0)
 	// Caso contrário, será enviado o cabeçalho e os dados conforme o cabeçalho
-	ssize_t operator<<(const char*);
+	ssize_t operator<<(const char*) const;
 
 	// Fluxo de entrada de dados codificados em string C 
 	// Se o tamanho do cabeçalho for zero, será recebido os dados do buffer
 	// Caso contrário, será recebido o cabeçalho e os dados conforme o cabeçalho
-	ssize_t operator>>(char*);
+	ssize_t operator>>(char*) const;
 
 	//compara o numero do socket
 	bool operator>(const Tclient&) const;
@@ -62,7 +62,7 @@ public:
 	Tclient& operator=(const Tclient&);
 
 	//retorna o endereço em string	
-	std::string addr();
+	std::string addr() const;
 
 	//destrutor
 	~Tclient();
@@ -74,13 +74,13 @@ class Tserver {
 	int socketS;
 public:
 	//Construtor do socket com endereco
-	Tserver(Adress&);
+	Tserver(const Adress&);
 
 	//Construtor copia
 	Tserver(const Tserver&);
 
 	//Get socket do Server
-	int sockS() const;
+	const int& sock() const;
 
 	// Espera conexao e retorna o cliente conectado
 	Tclient waitConection();
