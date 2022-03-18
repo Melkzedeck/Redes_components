@@ -25,5 +25,5 @@ int main(int argc, char** argv){
 		cout << "Message received: " << msg << endl;
 		cout << "Total of " << count << " bytes received" <<endl << endl;
 	}
-	
-} 
+	sockCli.shut();	
+}

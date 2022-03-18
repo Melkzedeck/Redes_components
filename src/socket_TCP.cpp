@@ -1,53 +1,5 @@
 #include "../include/socket_TCP.h"
 
-/*std::string getAddr(int sock){
-	// Get my ip address and port
-	sockaddr_in addr4;
-	sockaddr_in6 addr6;
-	sockaddr *myAddr, addr;
-    socklen_t lenMy = sizeof(addr);
-	myAddr = (sockaddr *)&addr6;
-	const char *ed;
-	int ad;
-	bool v4 = true;
-	char myIP[20];
-
-    bzero(&addr4, sizeof(addr4));
-    bzero(&addr6, sizeof(addr6));
-    bzero(&addr, sizeof(addr));
-	bzero(&myIP,20);
-
-	ad = getpeername(sock, myAddr, &lenMy);
-	if(lenMy == sizeof(addr4)){
-		memcpy(&addr4,myAddr,lenMy);
-		ed = inet_ntop(AF_INET, (sockaddr *)&addr4.sin_addr, myIP, lenMy);
-	}
-	else if(lenMy == sizeof(addr6)){
-		ed = inet_ntop(AF_INET6, (sockaddr *)&addr6.sin6_addr, myIP, lenMy);
-	}
-		
-
-	/*//* Get my ip address and port
-	sockaddr my_addr;
-	sockaddr_in addr4;
-	sockaddr_in6 addr6;
-	const char *ed;
-	bool v4 = true;
-	char myIP[20];
-
-    bzero(&addr4, sizeof(addr4));
-    bzero(&addr6, sizeof(addr6));
-	bzero(&myIP,20);
-
-    socklen_t len = sizeof(addr4);
-	int ad = getsockname(sock, &my_addr, &len);
-	ed = inet_ntop(AF_INET, &my_addr, myIP, len);
-	ed = inet_ntop(AF_INET6, &my_addr, myIP, len);
-
-    
-	return(std::string(myIP));
-}
-*/
 
 /*-------------------- Comeco da classe Tclient --------------------*/
 
@@ -160,7 +112,7 @@ ssize_t Tclient::operator>>(char* data) const{
 }
 
 
-Tclient::~Tclient(){
+void Tclient::shut(){
 	close(socket_);
 }
 
@@ -198,25 +150,8 @@ Tclient Tserver::waitConection(){
     int socketC;
 	struct sockaddr_storage cstorage;
     struct sockaddr *caddr = (struct sockaddr *)(&cstorage);
-	struct sockaddr_in *addr4 = nullptr;
-	struct sockaddr_in6 *addr6 = nullptr;
-	char bufAddr[80];
-	bzero(bufAddr,80);
     socklen_t caddrlen = sizeof(struct sockaddr_storage);
-	socketC = accept(socketS, caddr, &caddrlen);
-	if(caddr->sa_family == AF_INET){
-		addr4 = (sockaddr_in *)caddr;
-		inet_ntop(AF_INET, &(addr4->sin_addr), bufAddr, sizeof(sockaddr_in));
-		printf("New connection , socket fd is %d , ip is : %s , port : %d \n", 
-		socketC , inet_ntoa(addr4->sin_addr) , ntohs(addr4->sin_port)); 
-	}
-	else if(caddr->sa_family == AF_INET6){
-		addr6 = (sockaddr_in6 *)caddr;
-		printf("New connection , socket fd is %d , ip is : %s , port : %d \n", 
-		socketC , inet_ntop(AF_INET6,&(addr6->sin6_addr), bufAddr, sizeof(sockaddr_in6)) , ntohs
-				(addr6->sin6_port)); 
-	}
-	
+	socketC = accept(socketS, caddr, &caddrlen);	
 	if (socketC == -1) {
             throw runtime_error("erro accept");
         }

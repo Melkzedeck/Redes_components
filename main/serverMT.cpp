@@ -14,7 +14,7 @@ int main(int argc, char** argv){
 	cout << "Nova conexão estabelecida no endereço " << addrServer.str() <<endl << endl;
 	Multiple server(addrServer);
 	string msg;
-	ssize_t count;
+	ssize_t count = -1;
 	const Tclient* newCli = nullptr;
 	const Tclient* client = nullptr;
 	int posEvento;// posicao do sockete em que aconteceu o evento
@@ -23,15 +23,20 @@ int main(int argc, char** argv){
 		server.wait();
 		newCli = server.addClient();
 		if(newCli != nullptr){
-			cout << "New connection: " << (newCli -> addr()) << endl;
+			cout << "New connection: " << (newCli -> addr()) << endl << endl;
 		}
 		posEvento = server.activity();
 		while(posEvento >= 0){
 			count = server >> msg;
 			client = server.listening();
-			if(client != nullptr){
+			if(client != nullptr && count > 0){
 				cout << "Msg from " << (client -> addr()) << ": " << msg << endl;
 				cout << "Total of received bytes: " << count << endl << endl;
+			}
+			else if(count == 0){
+				cout << "Client disconnected: " << (client -> addr()) << endl;
+				cout << "Removig of client list"  << endl << endl;
+				server.closeSocketIt();
 			}
 			posEvento = server.activity();
 		}

@@ -66,8 +66,8 @@ public:
 	//retorna o endereço em string	
 	std::string addr() const;
 
-	//destrutor
-	~Tclient();
+	//fecha a conexão do soquete
+	void shut();
 };
 
 

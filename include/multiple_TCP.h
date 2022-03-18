@@ -52,13 +52,16 @@ class Multiple{
 
 		ssize_t sendData(const int& pos, char* data);
 
-		ssize_t operator>>(std::string msg);
+		ssize_t operator>>(std::string& msg);
 
-		ssize_t operator<<(std::string msg);
+		ssize_t operator<<(std::string& msg);
 
 		ssize_t operator>>(char* data);
 
 		ssize_t operator<<(char* data);
 
 		const Tclient* listening();
+
+		// destrutor
+		~Multiple();
 };

@@ -23,5 +23,5 @@ int main(int argc, char** argv){
 		cout << "Message sended: " << msg << endl;
 		cout << "Total of " << count << "bytes sended" <<endl << endl;
 	} while(msg != "kill" && msg.size() > 0);
-	
+	sock.shut();
 }

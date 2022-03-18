@@ -53,9 +53,7 @@ const Tclient* Multiple::addClient(){
 	// se a atividade for no cliente
 	
 	if(FD_ISSET(server.sock(), &readfds) > 0){
-		Tclient newCli = server.waitConection();
-		list.push_back(newCli);
-		newCli = Tclient(0);
+		list.push_back(server.waitConection());
 		return &list[list.size()-1];
 	}
 	return nullptr;
@@ -74,6 +72,7 @@ const int& Multiple::activity(){
 }
 
 void Multiple::closeSocketIt(){
+	list[it].shut();
 	list.erase(list.begin()+it);
 	it--;
 }
@@ -87,11 +86,11 @@ ssize_t Multiple::sendData(const int& pos, char* data){
 	return list[pos] << data;
 }
 
-ssize_t Multiple::operator>>(std::string msg){
+ssize_t Multiple::operator>>(std::string& msg){
 	return list[it] >> msg;
 }
 
-ssize_t Multiple::operator<<(std::string msg){
+ssize_t Multiple::operator<<(std::string& msg){
 	return list[it] << msg;
 }
 
@@ -108,3 +107,9 @@ const Tclient* Multiple::listening(){
 	return &list[it];
 }
 
+Multiple::~Multiple(){
+	FD_ZERO(&readfds);
+	for(unsigned i = 0; i < list.size(); i++){
+		list[i].shut();
+	}
+}
