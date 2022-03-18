@@ -9,6 +9,8 @@
 #include <stdexcept>
 #include "Adress.h"
 
+std::string getAddr(int sock);
+
 
 class Tclient {
 	int socket_;

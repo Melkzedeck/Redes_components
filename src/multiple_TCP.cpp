@@ -44,14 +44,18 @@ void Multiple::wait(){  // se for 1 -> servidor, se for 0 -> cliente
 	activity = select( max_sd + 1 , &readfds , NULL , NULL , NULL);  
 	if ((activity < 0) && (errno!=EINTR))  
 	{  
+		printf("error select: %s\n", strerror(errno));
     	throw std::runtime_error("select");
 	}  
 } 
 
 const Tclient* Multiple::addClient(){
 	// se a atividade for no cliente
+	
 	if(FD_ISSET(server.sock(), &readfds) > 0){
-		list.push_back(server.waitConection());
+		Tclient newCli = server.waitConection();
+		list.push_back(newCli);
+		newCli = Tclient(0);
 		return &list[list.size()-1];
 	}
 	return nullptr;

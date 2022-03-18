@@ -14,12 +14,12 @@ MAIN_DIR=./main/
 OBJ_DIR=./obj/
 
 all: make_dir $(OBJ_DEPENDENCES)
-	echo $(C_DEPENDENCES)
-	$(CC) $(CFLAGS) $(MAIN_DIR)server$(CFORMAT) $(OBJ_DEPENDENCES) -o server -I$(H_DIR)
-	$(CC) $(CFLAGS) $(MAIN_DIR)client$(CFORMAT) $(OBJ_DEPENDENCES) -o client -I$(H_DIR)
+	$(CC) $(CFLAGS) $(MAIN_DIR)server$(CFORMAT) $(OBJ_DEPENDENCES) -o server.out -I$(H_DIR)
+	$(CC) $(CFLAGS) $(MAIN_DIR)serverMT$(CFORMAT) $(OBJ_DEPENDENCES) -o serverMT.out -I$(H_DIR)
+	$(CC) $(CFLAGS) $(MAIN_DIR)client$(CFORMAT) $(OBJ_DEPENDENCES) -o client.out -I$(H_DIR)
 
 $(OBJ_DIR)%.o: $(C_DIR)%$(CFORMAT)
-	$(CC) $(CFLAGS) -c $< -o $@ -I$(H_DIR)
+	@$(CC) $(CFLAGS) -c $< -o $@ -I$(H_DIR)
 
 
 make_dir:
@@ -31,5 +31,5 @@ cleanObj:
 
 clean: cleanObj
 	@ rmdir obj
-	@ rm  client server
+	@ rm  ./*.out
 	@ echo "binários excluídos"

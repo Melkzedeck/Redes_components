@@ -67,7 +67,7 @@ Adress::Adress(string addrstr, string port_s){
 	struct in_addr inaddr4;// IPv4 address
     struct in6_addr inaddr6; // IPv6 address
     if (inet_pton(AF_INET, addrstr_, &inaddr4)) {
-        addr6 = NULL;
+        addr6 = nullptr;
         addr4 = (struct sockaddr_in *)&storage;
         addr4->sin_family = AF_INET;
         addr4->sin_port = htons(port_);;
@@ -75,7 +75,7 @@ Adress::Adress(string addrstr, string port_s){
 		family_ = AF_INET;
     }
     else if (inet_pton(AF_INET6, addrstr_, &inaddr6)) {
-        addr4 = NULL;
+        addr4 = nullptr;
         addr6 = (struct sockaddr_in6 *)&storage;
         addr6->sin6_family = AF_INET6;
         addr6->sin6_port = htons(port_);

@@ -5,10 +5,81 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "server",
+			"name": "server ipv4",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "${workspaceFolder}/server",
+			"program": "${workspaceFolder}/server.out",
+			"args": ["v4","8080"],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}",
+			"environment": [],
+			"externalConsole": false,
+			"MIMode": "gdb",
+			"setupCommands": [
+				{
+					"description": "Habilitar a reformatação automática para gdb",
+					"text": "-enable-pretty-printing",
+					"ignoreFailures": true
+				},
+				{
+					"description": "Definir Tipo de Desmontagem como Intel",
+					"text": "-gdb-set disassembly-flavor intel",
+					"ignoreFailures": true
+				}
+			]
+		},
+		{
+			"name": "serverMT ipv4",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/serverMT.out",
+			"args": ["v4","8080"],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}",
+			"environment": [],
+			"externalConsole": false,
+			"MIMode": "gdb",
+			"setupCommands": [
+				{
+					"description": "Habilitar a reformatação automática para gdb",
+					"text": "-enable-pretty-printing",
+					"ignoreFailures": true
+				},
+				{
+					"description": "Definir Tipo de Desmontagem como Intel",
+					"text": "-gdb-set disassembly-flavor intel",
+					"ignoreFailures": true
+				}
+			]
+		},
+		{
+			"name": "client ipv4",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/client.out",
+			"args": ["127.0.0.0","8080"],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}",
+			"environment": [],
+			"externalConsole": false,
+			"MIMode": "gdb",
+			"setupCommands": [
+				{
+					"description": "Habilitar a reformatação automática para gdb",
+					"text": "-enable-pretty-printing",
+					"ignoreFailures": true
+				},
+				{
+					"description": "Definir Tipo de Desmontagem como Intel",
+					"text": "-gdb-set disassembly-flavor intel",
+					"ignoreFailures": true
+				}
+			]
+		},{
+			"name": "server ipv6",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/server.out",
 			"args": ["v6","8080"],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}",
@@ -29,11 +100,35 @@
 			]
 		},
 		{
-			"name": "client",
+			"name": "serverMT ipv6",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "${workspaceFolder}/client",
-			"args": ["::1","8080"],
+			"program": "${workspaceFolder}/serverMT.out",
+			"args": ["v6","8080"],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}",
+			"environment": [],
+			"externalConsole": false,
+			"MIMode": "gdb",
+			"setupCommands": [
+				{
+					"description": "Habilitar a reformatação automática para gdb",
+					"text": "-enable-pretty-printing",
+					"ignoreFailures": true
+				},
+				{
+					"description": "Definir Tipo de Desmontagem como Intel",
+					"text": "-gdb-set disassembly-flavor intel",
+					"ignoreFailures": true
+				}
+			]
+		},
+		{
+			"name": "client ipv6",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/client.out",
+			"args": ["::","8080"],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}",
 			"environment": [],
