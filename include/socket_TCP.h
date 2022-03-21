@@ -67,7 +67,7 @@ public:
 	std::string addr() const;
 
 	//fecha a conexão do soquete
-	void shut();
+	void Close();
 };
 
 

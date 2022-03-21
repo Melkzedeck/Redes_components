@@ -9,37 +9,46 @@
 #include <stdexcept>
 #include "Adress.h"
 
-/*
+
 class Usock {
 	int socket_;
 	static unsigned int tam_max;
 public:
-	//Construtor default
+	//Construtor a partir da versão IP
 	Usock(const char&);
+
 	//Construtor copia
 	Usock(const Usock&);
+
 	//construtor a partir de um int
 	Usock(const int&);
+
 	//Liga o servidor no endereco
-	void bind_s(const Adress&);
+	void Bind(const Adress&);
+
 	/* define um tamanho maximo de mensagem
-	Tamanho default: 1024*//*
+	Tamanho default: 1024*/
 	static void setTAM(const int&);
+
 	//Get socket
 	int sock() const;
+
 	/* fluxo de saída de string:
 	envia para o socket a string
-	e retorna a qntd de bits enviadas*//*
+	e retorna a qntd de bits enviadas*/
 	ssize_t send(const Adress&, const std::string&);
+
 	/* fluxo de entrada de string:
 	recebe do socket uma string
-	e retorna a qntd de bits recebidas*//*
+	e retorna a qntd de bits recebidas*/
 	ssize_t recv(Adress&, std::string&);
+
 	//compara o numero do socket
 	bool operator>(const Usock&) const;
+
 	//operador igual
 	Usock& operator=(const Usock&);
-	//destrutor
-	~Usock();
+
+	//fechar a conexão
+	void Close();
 };
-*/

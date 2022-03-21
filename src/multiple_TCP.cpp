@@ -72,7 +72,7 @@ const int& Multiple::activity(){
 }
 
 void Multiple::closeSocketIt(){
-	list[it].shut();
+	list[it].Close();
 	list.erase(list.begin()+it);
 	it--;
 }
@@ -110,6 +110,6 @@ const Tclient* Multiple::listening(){
 Multiple::~Multiple(){
 	FD_ZERO(&readfds);
 	for(unsigned i = 0; i < list.size(); i++){
-		list[i].shut();
+		list[i].Close();
 	}
 }

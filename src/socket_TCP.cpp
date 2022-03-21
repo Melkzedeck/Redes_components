@@ -112,7 +112,7 @@ ssize_t Tclient::operator>>(char* data) const{
 }
 
 
-void Tclient::shut(){
+void Tclient::Close(){
 	close(socket_);
 }
 

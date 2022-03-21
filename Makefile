@@ -17,6 +17,7 @@ all: make_dir $(OBJ_DEPENDENCES)
 	$(CC) $(CFLAGS) $(MAIN_DIR)server$(CFORMAT) $(OBJ_DEPENDENCES) -o server.out -I$(H_DIR)
 	$(CC) $(CFLAGS) $(MAIN_DIR)serverMT$(CFORMAT) $(OBJ_DEPENDENCES) -o serverMT.out -I$(H_DIR)
 	$(CC) $(CFLAGS) $(MAIN_DIR)client$(CFORMAT) $(OBJ_DEPENDENCES) -o client.out -I$(H_DIR)
+	$(CC) $(CFLAGS) $(MAIN_DIR)Uclient$(CFORMAT) $(OBJ_DEPENDENCES) -o Uclient.out -I$(H_DIR)
 
 $(OBJ_DIR)%.o: $(C_DIR)%$(CFORMAT)
 	@$(CC) $(CFLAGS) -c $< -o $@ -I$(H_DIR)
