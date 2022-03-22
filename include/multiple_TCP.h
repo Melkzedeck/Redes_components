@@ -48,18 +48,25 @@ class Multiple{
 		// retorna a posição do cliente em que houve atividade
 		const int& activity();
 
+		//
 		ssize_t receiveData(const int& pos, char* data);
-
+		
+		//
 		ssize_t sendData(const int& pos, char* data);
 
+		//
 		ssize_t operator>>(std::string& msg);
 
+		//
 		ssize_t operator<<(std::string& msg);
 
+		//
 		ssize_t operator>>(char* data);
 
+		//
 		ssize_t operator<<(char* data);
 
+		//
 		const Tclient* listening();
 
 		// destrutor
